@@ -254,7 +254,7 @@ namespace Aron.DawnMiner.Services
             if (System.IO.File.Exists("data/loginConfig.json"))
                 loginConfig = JsonConvert.DeserializeObject<LoginConfig>(System.IO.File.ReadAllText("data/loginConfig.json"));
 
-            if (loginConfig == null)
+            if (loginConfig == null || loginConfig.username != _appConfig.UserName)
             {
                 // 未登入，輸入帳號密碼
                 IWebElement? usernameElement = driver.FindElement(By.Id("email"));
