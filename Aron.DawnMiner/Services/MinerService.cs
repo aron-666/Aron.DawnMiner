@@ -244,7 +244,7 @@ namespace Aron.DawnMiner.Services
         {
             driver.Navigate().GoToUrl($"chrome-extension://{extensionId}/signin.html");
 
-            WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
+            WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(60));
 
             Console.WriteLine("Go to app: " + driver.Url);
 
@@ -284,8 +284,20 @@ namespace Aron.DawnMiner.Services
 
                 // 等待 url 包含 dashboard
 
-                while (!driver.Url.Contains("dashboard"))
+                while (true)
                 {
+                    try
+                    {
+                        if (driver.Url.Contains("dashboard"))
+                        {
+                            break;
+                        }
+                    }
+                    catch (Exception)
+                    {
+                    }
+                    
+
                     await Task.Delay(3000);
                 }
 
@@ -381,32 +393,41 @@ namespace Aron.DawnMiner.Services
                 IWebElement? loginButton = driver.FindElement(By.Id("loginButton"));
                 loginButton.Click();
                 await Task.Delay(10000);
-                
+
                 // 清除驗證碼輸入
-                captchaElement.Clear();
-
-                // 清除驗證碼圖片src
-                driver.ExecuteScript("document.getElementById('puzzleImage').src = '';");
-
-                // 等待驗證碼圖片src有值
-                WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
-                wait.Until(d =>
+                try
                 {
-                    try
+                    captchaElement.Clear();
+
+                    // 清除驗證碼圖片src
+                    driver.ExecuteScript("document.getElementById('puzzleImage').src = '';");
+
+                    // 等待驗證碼圖片src有值
+                    WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(60));
+                    wait.Until(d =>
                     {
-                        string? base64 = (string)driver.ExecuteScript("return document.getElementById('puzzleImage').src;");
-                        if (!string.IsNullOrEmpty(base64) && base64.StartsWith("data:image"))
+                        try
                         {
-                            _minerRecord.CaptchaBase64Image = base64;
-                            return true;
+                            string? base64 = (string)driver.ExecuteScript("return document.getElementById('puzzleImage').src;");
+                            if (!string.IsNullOrEmpty(base64) && base64.StartsWith("data:image"))
+                            {
+                                _minerRecord.CaptchaBase64Image = base64;
+                                return true;
+                            }
+                            return false;
                         }
-                        return false;
-                    }
-                    catch (Exception)
-                    {
-                        return false;
-                    }
-                });
+                        catch (Exception)
+                        {
+                            return false;
+                        }
+                    });
+                }
+                catch
+                {
+
+                }
+
+                
             }
             catch (Exception ex)
             {
@@ -428,7 +449,7 @@ namespace Aron.DawnMiner.Services
                 refreshButton.Click();
 
                 // 等待驗證碼圖片src有值
-                WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
+                WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(60));
                 wait.Until(d =>
                 {
                     try
