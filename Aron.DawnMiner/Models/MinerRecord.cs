@@ -103,5 +103,12 @@ namespace Aron.DawnMiner.Models
         [Display(Name = "圖片")]
         public string? Base64Image { get; set; }
 
+        /// <summary>
+        /// 驗證碼圖片
+        /// </summary>
+        public string? CaptchaBase64Image { get; set; }
+
+        
+
     }
 }

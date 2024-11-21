@@ -8,6 +8,7 @@ using System.Drawing;
 using Newtonsoft.Json;
 using System.Text;
 using Aron.DawnMiner.Models;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 
 namespace Aron.DawnMiner.Services
 {
@@ -102,7 +103,6 @@ namespace Aron.DawnMiner.Services
                 // get assembly version
                 _minerRecord.AppVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
-                string token = _appConfig.DwToken;
 
                 // 設定 Chrome 擴充功能路徑
                 string chromedriverPath = "./chromedriver";
@@ -143,17 +143,10 @@ namespace Aron.DawnMiner.Services
                 try
                 {
                     
-                    driver.Navigate().GoToUrl($"chrome-extension://{extensionId}/signin.html");
-                    WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(50));
+                    _minerRecord.Status = MinerStatus.LoginPage;
+                    await Login();
 
-                    Console.WriteLine("Go to app: " + driver.Url);
-
-                   _ = wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//h5[text()='Login']")));
-                    AddToLocalStorage(driver, token);
-
-                    // go to dashboard
-                    driver.Navigate().GoToUrl($"chrome-extension://{extensionId}/dashboard.html");
-                    Console.WriteLine("Go to dashboard: " + driver.Url);
+                    
 
                 }
                 catch (Exception ex)
@@ -247,53 +240,106 @@ namespace Aron.DawnMiner.Services
             }
         }
 
-        static void SetLocalStorageItem(IWebDriver driver, string key, string value)
+        private async Task Login()
         {
-            IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
-            js.ExecuteScript($"window.localStorage.setItem('{key}', '{value}');");
-        }
+            driver.Navigate().GoToUrl($"chrome-extension://{extensionId}/signin.html");
 
-        static void SetCookie(IWebDriver driver, string key, string value)
-        {
-            driver.Manage().Cookies.AddCookie(new OpenQA.Selenium.Cookie(key, value, "/", DateTime.UtcNow.AddYears(1)));
-        }
+            WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
 
-        static string GetLocalStorageItem(IWebDriver driver, string key)
-        {
-            IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
-            return (string)js.ExecuteScript($"return window.localStorage.getItem('{key}');");
-        }
+            Console.WriteLine("Go to app: " + driver.Url);
+
+            _ = wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//h5[text()='Login']")));
+            LoginConfig? loginConfig = null;
+            // 讀取 data/loginConfig.json
+            if (System.IO.File.Exists("data/loginConfig.json"))
+                loginConfig = JsonConvert.DeserializeObject<LoginConfig>(System.IO.File.ReadAllText("data/loginConfig.json"));
+
+            if (loginConfig == null || loginConfig.username != _appConfig.UserName)
+            {
+                // 未登入，輸入帳號密碼
+                IWebElement? usernameElement = driver.FindElement(By.Id("email"));
+                usernameElement.SendKeys(_appConfig.UserName);
+                IWebElement? passwordElement = driver.FindElement(By.Id("password"));
+                passwordElement.SendKeys(_appConfig.Password);
 
 
-        static string SetLocalStorageItem2(ChromeDriver driver, string key, string value)
-        {
-            driver.ExecuteScript($"localStorage.setItem('{key}', '{value}');");
-            var result = driver.ExecuteScript($"return localStorage.getItem('{key}');") as string;
-            return result;
-        }
+                // 等待驗證碼圖片src有值
+                wait.Until(d =>
+                {
+                    try
+                    {
+                        string? base64 = (string)driver.ExecuteScript("return document.getElementById('puzzleImage').src;");
+                        if (!string.IsNullOrEmpty(base64) && base64.StartsWith("data:image"))
+                        {
+                            _minerRecord.CaptchaBase64Image = base64;
+                            return true;
+                        }
+                        return false;
+                    }
+                    catch (Exception)
+                    {
+                        return false;
+                    }
+                });
 
-        static void AddToLocalStorage(ChromeDriver driver, string token)
-        {
-            string json = """
-                                {
-                  "discordid": "discordid",
-                  "discordid_points": 5000,
-                  "firstname": "",
-                  "lastUpdatedTime": "",
-                  "password": "", 
-                  "referralCode": "abcdefg",
-                  "refrral_points": 0,
-                  "telegramid": "telegramid",
-                  "telegramid_points": 5000,
-                  "token": "{token}", 
-                  "total_points": 81000,
-                  "twitter_x_id": "twitter_x_id",
-                  "twitter_x_id_points": 5000,
-                  "username": "",
-                  "wallet": ""
+                // 等待 url 包含 dashboard
+
+                while (!driver.Url.Contains("dashboard"))
+                {
+                    await Task.Delay(3000);
                 }
-                """;
-            json = json.Replace("{token}", token);
+
+                // 取得 token
+                loginConfig = GetLoginConfig();
+
+                if (loginConfig == null)
+                {
+                    throw new Exception("Failed to get token");
+
+                }
+                else
+                {
+                    // 寫入 data/loginConfig.json
+                    System.IO.File.WriteAllText("data/loginConfig.json", JsonConvert.SerializeObject(loginConfig));
+
+                    // 清除驗證碼
+                    _minerRecord.CaptchaBase64Image = null;
+                }
+            }
+            else
+            {
+                AddToLocalStorage(driver, loginConfig);
+
+                // go to dashboard
+                driver.Navigate().GoToUrl($"chrome-extension://{extensionId}/dashboard.html");
+                Console.WriteLine("Go to dashboard: " + driver.Url);
+            }
+
+        }
+        
+        private LoginConfig GetLoginConfig()
+        {
+            var script = @"
+                return new Promise((resolve, reject) => {
+                    chrome.storage.local.get(null, (result) => {
+                        if (chrome.runtime.lastError) {
+                            reject(chrome.runtime.lastError);
+                        } else {
+                            resolve(JSON.stringify(result));
+                        }
+                    });
+                });
+            ";
+
+            var result = driver.ExecuteScript(script);
+            return JsonConvert.DeserializeObject<LoginConfig>(result.ToString());
+        }
+
+
+        static void AddToLocalStorage(ChromeDriver driver, LoginConfig loginConfig)
+        {
+            string json = JsonConvert.SerializeObject(loginConfig);
+            json = json.Replace("{token}", loginConfig.token);
             driver.ExecuteScript($"const data = {json}; " +
                 $"chrome.storage.local.set(data, () => {{\r\n  // 檢查是否有錯誤發生\r\n  if (chrome.runtime.lastError) {{\r\n    console.error(\"儲存資料時發生錯誤：\", chrome.runtime.lastError);\r\n  }} else {{\r\n    console.log(\"資料已成功儲存到 chrome.storage.local\");\r\n  }}\r\n}});");
             // 等待chrome.storage.local 取得token有值
@@ -301,7 +347,7 @@ namespace Aron.DawnMiner.Services
             driver.ExecuteScript(@"
                 tokenMatchResult = false; // 全局變數儲存比對結果
                 chrome.storage.local.get('token', (data) => { 
-                    tokenMatchResult = data.token === '" + token + @"'; 
+                    tokenMatchResult = data.token === '" + loginConfig.token + @"'; 
                 });
             ");
             bool ret = wait.Until(d =>
@@ -321,31 +367,90 @@ namespace Aron.DawnMiner.Services
             }
         }
 
-        static bool WaitForElementExists(ChromeDriver driver, By by, int timeout = 10)
+
+        public async Task ApplyCaptcha(string captcha)
         {
+            if (driver == null)
+                return;
             try
             {
-                new WebDriverWait(driver, TimeSpan.FromSeconds(timeout)).Until(ExpectedConditions.ElementExists(by));
-                return true;
+
+                IWebElement? captchaElement = driver.FindElement(By.Id("puzzelAns"));
+                captchaElement.SendKeys(captcha);
+
+                IWebElement? loginButton = driver.FindElement(By.Id("loginButton"));
+                loginButton.Click();
+                await Task.Delay(10000);
+                
+                // 清除驗證碼輸入
+                captchaElement.Clear();
+
+                // 清除驗證碼圖片src
+                driver.ExecuteScript("document.getElementById('puzzleImage').src = '';");
+
+                // 等待驗證碼圖片src有值
+                WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
+                wait.Until(d =>
+                {
+                    try
+                    {
+                        string? base64 = (string)driver.ExecuteScript("return document.getElementById('puzzleImage').src;");
+                        if (!string.IsNullOrEmpty(base64) && base64.StartsWith("data:image"))
+                        {
+                            _minerRecord.CaptchaBase64Image = base64;
+                            return true;
+                        }
+                        return false;
+                    }
+                    catch (Exception)
+                    {
+                        return false;
+                    }
+                });
             }
-            catch (WebDriverTimeoutException)
+            catch (Exception ex)
             {
-                return false;
+                Console.WriteLine(ex);
             }
         }
 
-        static IWebElement WaitForElement(IWebDriver driver, By by, int timeout = 10)
+        public void RefreshCaptcha()
         {
+            if (driver == null)
+                return;
             try
             {
-                var element = new WebDriverWait(driver, TimeSpan.FromSeconds(timeout)).Until(ExpectedConditions.ElementExists(by));
-                return element;
+                // 清除驗證碼圖片src
+                driver.ExecuteScript("document.getElementById('puzzleImage').src = '';");
+
+
+                IWebElement? refreshButton = driver.FindElement(By.Id("captcha-Refresh"));
+                refreshButton.Click();
+
+                // 等待驗證碼圖片src有值
+                WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
+                wait.Until(d =>
+                {
+                    try
+                    {
+                        string? base64 = (string)driver.ExecuteScript("return document.getElementById('puzzleImage').src;");
+                        if(!string.IsNullOrEmpty(base64) && base64.StartsWith("data:image"))
+                        {
+                            _minerRecord.CaptchaBase64Image = base64;
+                            return true;
+                        }
+                        return false;
+                    }
+                    catch (Exception)
+                    {
+                        return false;
+                    }
+                });
             }
-            catch (WebDriverTimeoutException e)
+            catch (Exception ex)
             {
-                throw;
+                Console.WriteLine(ex);
             }
         }
-
     }
 }

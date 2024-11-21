@@ -39,5 +39,15 @@ namespace Aron.DawnMiner.Controllers
         {
             return _minerRecord;
         }
+
+        public void RefreshCaptcha()
+        {
+            ((MinerService)_minerService)?.RefreshCaptcha();
+        }
+
+        public void ApplyCaptcha([FromQuery] string captcha)
+        {
+            ((MinerService)_minerService)?.ApplyCaptcha(captcha).GetAwaiter().GetResult();
+        }
     }
 }

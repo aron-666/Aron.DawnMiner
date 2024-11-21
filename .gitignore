@@ -356,3 +356,5 @@ Aron.DawnMiner/Properties/launchSettings.json
 Aron.DawnMiner.WinControl/app/
 
 Aron.DawnMiner/logs/
+
+Aron.DawnMiner/Data/loginConfig.json
