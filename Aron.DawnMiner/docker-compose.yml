@@ -1,0 +1,14 @@
+version: '1'
+services:
+  dawn:
+    image: aron666/dawn
+    container_name: dawn
+    environment:
+      - DW_TOKEN=token
+      - ADMIN_USER=admin
+      - ADMIN_PASS=admin
+    ports:
+      - 5006:50006
+    build: 
+      context: .
+      dockerfile: Dockerfile

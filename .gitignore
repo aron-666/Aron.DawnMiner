@@ -347,3 +347,12 @@ healthchecksdb
 
 # Backup folder for Package Reference Convert tool in Visual Studio 2017
 MigrationBackup/
+*.tar
+Aron.DawnMiner/db/
+
+
+Aron.DawnMiner/Properties/launchSettings.json
+
+Aron.DawnMiner.WinControl/app/
+
+Aron.DawnMiner/logs/
