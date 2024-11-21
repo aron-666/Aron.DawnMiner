@@ -85,9 +85,13 @@ internal class Program
             AppConfig appConfig = new AppConfig();
             builder.Configuration.Bind("app", appConfig);
             
-            if (Environment.GetEnvironmentVariables().Contains("DW_TOKEN"))
+            if (Environment.GetEnvironmentVariables().Contains("DW_USER"))
             {
-                appConfig.DwToken = Environment.GetEnvironmentVariable("DW_TOKEN").ToString();
+                appConfig.UserName = Environment.GetEnvironmentVariable("DW_USER").ToString();
+            }
+            if (Environment.GetEnvironmentVariables().Contains("DW_PASS"))
+            {
+                appConfig.Password = Environment.GetEnvironmentVariable("DW_PASS").ToString();
             }
             if (Environment.GetEnvironmentVariables().Contains("ADMIN_USER"))
             {

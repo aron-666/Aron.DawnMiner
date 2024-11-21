@@ -51,7 +51,7 @@
         max-width: 100%;
         height: auto;
         display: block;
-        margin: 20px 0;
+        margin: 10px 0;
     }
 
     .status-connected {
@@ -73,6 +73,50 @@
         border-color: #856404;
         border-width: 15px;
         color: #856404;
+    }
+
+    #captcha {
+        display: flex;
+        flex-direction: column; /* 垂直排列 */
+        align-items: flex-start; /* 左對齊 */
+        gap: 10px; /* 元素間距 */
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background-color: #f9f9f9;
+        width: 100%; /* 撐滿容器寬度 */
+    }
+
+    /* 驗證碼圖片樣式 */
+    .puzzleImageSty {
+        width: 180px;
+        height: 60px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    /* 刷新按鈕樣式 */
+    .refresh-btn {
+        cursor: pointer;
+        padding: 5px;
+        font-size: 16px;
+    }
+
+    /* 等號樣式 */
+    .puzzelEqualSign {
+        font-size: 20px;
+        font-weight: bold;
+        color: #333;
+    }
+
+    /* 輸入框樣式 */
+    .inputstyle input {
+        width: 180px;
+        padding: 5px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        text-align: center;
+        font-size: 16px;
     }
 </style>
 <script>
@@ -161,6 +205,16 @@
                         $('#exTime').hide();
                     }
 
+                    if (data.CaptchaBase64Image) {
+                        $('#captcha').show();
+
+                        if ($('#puzzleImage').attr('src') != data.CaptchaBase64Image)
+                            $('#puzzleImage').attr('src', data.CaptchaBase64Image);
+                    }
+                    else {
+                        $('#captcha').hide();
+                    }
+
                     if (data.Status == "Disconnected") {
                         $('#recSec').show();
                         $('#recCount').show();
@@ -185,6 +239,29 @@
             });
         });
     }, 1000);
+    function RefreshCaptcha() {
+        $.ajax({
+            url: 'Miner/RefreshCaptcha',
+            type: 'GET',
+            xhrFields: {
+                withCredentials: true
+            }
+        }).done(function (data) { });
+    }
+
+    function ApplyCaptcha() {
+        const ans = $('#puzzelAns').val();
+        $.ajax({
+            url: 'Miner/ApplyCaptcha?captcha=' + encodeURI($("#puzzelAns").val()),
+            xhrFields: {
+                withCredentials: true
+            }
+        }).done(function (data) {
+            $("#puzzelAns").val('');
+        });
+
+    }
+
 </script>
 
  
@@ -192,37 +269,86 @@
 
 
 <div class="container">
+
     <div class="row justify-content-center">
+
         <div class="col-md-6 mb-4">
+
             <div class="card status-appstart" id="card">
+
                 <div class="card-body">
+
                     <div id="divUpdate">
+
                         <span id="updateMsg"></span>
+
                         <br />
+
                         <a id="goToUpdate" href="https://github.com/aron-666/Aron.DawnMiner">
+
                             前往更新
+
                         </a>
+
                         <br /><br />
+
                     </div>
+
                     <p class="card-text">
+
+                        <div id="captcha">
+                            <img class="puzzleImageSty" id="puzzleImage" src="">
+                            <button type="button" class="refresh-btn" id="captcha-Refresh" onclick="RefreshCaptcha()">
+                                Refresh
+                            </button>
+                            <span class="puzzelEqualSign"> = </span>
+                            <div class="inputstyle puzzleInput">
+                                <input type="text" class="inputbox" id="puzzelAns" placeholder="?">
+                            </div>
+                            <button type="button" class="refresh-btn" id="captcha-Submit" onclick="ApplyCaptcha()">
+                                Submit
+                            </button>
+                        </div>
+
+
                         @* <strong>礦老闆: </strong> <span id="loginUserName"></span><br /><br /> *@
+
                         <strong>狀態: </strong> <span id="status"></span><br /><br />
+
                         <strong>是否連線: </strong> <span id="isConnected"></span><br /><br />
+
                         <strong>外網IP: </strong> <span id="publicIp"></span><br /><br />
+
                         <strong>網路品質: </strong> <span id="networkQuality"></span><br /><br />
+
                         <strong>總工資: </strong> <span id="points"></span><br /><br />
+
                         <div id="recSec">
+
                             <strong>重連秒數: </strong> <span id="reconnectSeconds"></span><br /><br />
+
                         </div>
+
                         <div id="recCount">
+
                             <strong>重連次數: </strong> <span id="reconnectCounts"></span><br /><br />
+
                         </div>
+
                     <p id="exMsg" style="display: none;"><strong>錯誤訊息: </strong> <span id="exception"></span><br /><br /></p>
+
                     <p id="exTime" style="display: none;"><strong>錯誤時間: </strong> <span id="exceptionTime"></span><br /><br /></p>
+
                     <img id="img1" src="" alt="狀態圖片" />
+
                     </p>
+
                 </div>
+
             </div>
+
         </div>
+
     </div>
+
 </div>
