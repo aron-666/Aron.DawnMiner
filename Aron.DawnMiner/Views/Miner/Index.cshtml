@@ -252,10 +252,16 @@
     function ApplyCaptcha() {
         const ans = $('#puzzelAns').val();
         $.ajax({
-            url: 'Miner/ApplyCaptcha?captcha=' + encodeURI($("#puzzelAns").val()),
+            url: 'Miner/ApplyCaptcha',
             xhrFields: {
                 withCredentials: true
-            }
+            },
+            type: 'POST',
+            dataType: 'json',
+            contentType: 'application/json; charset=UTF-8',
+            data: JSON.stringify( {
+                ans: $('#puzzelAns').val()
+            })
         }).done(function (data) {
             $("#puzzelAns").val('');
         });
