@@ -6,8 +6,8 @@
 # Aron.DawnMiner
 Written in .Net 8
 
-## If you find it useful, support me by using my referral code: NwWtzg6qBuzUzXD
-[Register Now at app.dawn.ai](https://app.dawn.ai/register?ref=NwWtzg6qBuzUzXD)
+## If you find it useful, support me by using my referral code: ly90oppy
+[Register Now at dawn](https://chromewebstore.google.com/detail/dawn-validator-chrome-ext/fpdkjdnhkakefebpekbdhillbhonfjjp)
 
 
 

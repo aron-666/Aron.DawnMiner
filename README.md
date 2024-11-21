@@ -7,8 +7,8 @@
 使用.Net 8撰寫
 
 
-## 好用請支持，使用我的推薦碼註冊: NwWtzg6qBuzUzXD
-[立即註冊 app.dawn.ai](https://app.dawn.ai/register?ref=NwWtzg6qBuzUzXD)
+## 好用請支持，使用我的推薦碼註冊: ly90oppy
+[立即註冊 dawn](https://chromewebstore.google.com/detail/dawn-validator-chrome-ext/fpdkjdnhkakefebpekbdhillbhonfjjp)
 
 
 ## 執行畫面
