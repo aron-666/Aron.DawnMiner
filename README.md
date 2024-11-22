@@ -32,15 +32,18 @@
          image: aron666/dawn
          container_name: dawn
          environment:
-            - DW_TOKEN=token
-            - ADMIN_USER=admin
-            - ADMIN_PASS=admin
-            - PROXY_ENABLE=false # true
-            - PROXY_HOST=http(s)://host:port
-            - PROXY_USER=user
-            - PROXY_PASS=pass
+           - DW_USER=user
+           - DW_PASS=password
+           - ADMIN_USER=admin
+           - ADMIN_PASS=admin
+           - PROXY_ENABLE=false # true
+           - PROXY_HOST=http(s)://host:port
+           - PROXY_USER=user
+           - PROXY_PASS=pass
+         volumes:
+           - ./data:/app/data
          ports:
-            - 5006:50006
+           - 5006:50006
    ```
 
    - Port 5006 會在你電腦上開一個 Port，要讓區網連請開防火牆 Port 5006
