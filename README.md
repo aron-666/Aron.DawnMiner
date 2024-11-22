@@ -47,14 +47,7 @@
    ```
 
    - Port 5006 會在你電腦上開一個 Port，要讓區網連請開防火牆 Port 5006
-   - DW_TOKEN: 
-   1. 打開瀏覽器 前往並登入 chrome-extension://fpdkjdnhkakefebpekbdhillbhonfjjp/signin.html
-   2. 輸入 allow pasting 然後貼上按enter:
-   ```
-   chrome.storage.local.get('token', (data) => {
-      console.log(data.token);
-   });
-   ```
+   
 
 3. 執行
    ```
@@ -63,10 +56,12 @@
    或
    docker-compose up -d
    ```
-   再來就可以用網址看後臺狀態了
+   再來就可以用網址看後臺狀態了，第一次登入需要輸入```驗證碼！```
 
    - 本機: [http://localhost:5006](http://localhost:5006)
    - 其他設備: 先開 cmd 打 `ipconfig`/`ifconfig` 找到你的區網 IP [http://IP:5006](http://IP:5006)
      - 關掉網頁還會繼續執行
      - Windows 要開機自動執行要去Docker Desktop設定改
+
+   ![image](https://github.com/aron-666/Aron.DawnMiner/blob/master/%E9%A9%97%E8%AD%89%E7%A2%BC.png?raw=true)
 

@@ -46,14 +46,7 @@ Written in .Net 8
    ```
 
    - Port 5006 will open a port on your computer. Open firewall port 5006 for LAN access.
-   - DW_TOKEN: 
-   1. Open your browser and go to ```chrome-extension://fpdkjdnhkakefebpekbdhillbhonfjjp/signin.html``` and log in.
-   2. Type "allow pasting" then paste the following and press enter:
-   ```
-   chrome.storage.local.get('token', (data) => {
-      console.log(data.token);
-   });
-   ```
+   
 
 3. Execute
    ```
@@ -62,11 +55,12 @@ Written in .Net 8
    or
    docker-compose up -d
    ```
-   Then, you can check the backend status using the following URLs:
+   Once executed, you can access the backend status through the browser. For the first login, you need to input the ```verification code```.
 
    - Local: [http://localhost:5006](http://localhost:5006)
    - Other devices: Open cmd and type `ipconfig`/`ifconfig` to find your LAN IP, then access [http://IP:5006](http://IP:5006)
      - The process continues even if the webpage is closed.
      - For Windows auto-start, adjust settings in Docker Desktop.
 
+   ![image](https://github.com/aron-666/Aron.DawnMiner/blob/master/%E9%A9%97%E8%AD%89%E7%A2%BC.png?raw=true)
 
