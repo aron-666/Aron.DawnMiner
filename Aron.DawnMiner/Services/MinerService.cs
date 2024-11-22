@@ -300,8 +300,21 @@ namespace Aron.DawnMiner.Services
 
                     await Task.Delay(3000);
                 }
+                // 等待包含Connection 字段
+                wait.Until(d =>
+                {
+                    try
+                    {
+                        return driver.PageSource.Contains("Connection");
+                    }
+                    catch (Exception)
+                    {
+                        return false;
+                    }
+                });
 
                 // 取得 token
+
                 loginConfig = GetLoginConfig();
 
                 if (loginConfig == null)
@@ -391,16 +404,17 @@ namespace Aron.DawnMiner.Services
                 captchaElement.SendKeys(captcha);
 
                 IWebElement? loginButton = driver.FindElement(By.Id("loginButton"));
-                loginButton.Click();
-                await Task.Delay(10000);
 
                 // 清除驗證碼輸入
                 try
                 {
-                    captchaElement.Clear();
 
                     // 清除驗證碼圖片src
                     driver.ExecuteScript("document.getElementById('puzzleImage').src = '';");
+                    loginButton.Click();
+                    await Task.Delay(2000);
+
+                    captchaElement.Clear();
 
                     // 等待驗證碼圖片src有值
                     WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(60));
