@@ -63,5 +63,5 @@
      - 關掉網頁還會繼續執行
      - Windows 要開機自動執行要去Docker Desktop設定改
 
-   ![image](https://github.com/aron-666/Aron.DawnMiner/blob/main/%E9%A9%97%E8%AD%89%E7%A2%BC.png?raw=true)
+   ![image](https://github.com/aron-666/Aron.DawnMiner/blob/main/%E6%88%AA%E5%9C%96/%E9%A9%97%E8%AD%89%E7%A2%BC.png?raw=true)
 

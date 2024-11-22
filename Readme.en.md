@@ -62,5 +62,5 @@ Written in .Net 8
      - The process continues even if the webpage is closed.
      - For Windows auto-start, adjust settings in Docker Desktop.
 
-   ![image](https://github.com/aron-666/Aron.DawnMiner/blob/main/%E9%A9%97%E8%AD%89%E7%A2%BC.png?raw=true)
+   ![image](https://github.com/aron-666/Aron.DawnMiner/blob/main/%E6%88%AA%E5%9C%96/%E9%A9%97%E8%AD%89%E7%A2%BC.png?raw=true)
 
