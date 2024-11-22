@@ -13,10 +13,10 @@ Written in .Net 8
 
 ## Execution Screenshots
 1. Login
-![image](https://github.com/aron-666/Aron.DawnMiner/blob/master/%E6%88%AA%E5%9C%96/%E5%BE%8C%E8%87%BA%E7%99%BB%E5%85%A5%E7%95%AB%E9%9D%A2.png?raw=true)
+![image](https://github.com/aron-666/Aron.DawnMiner/blob/main/%E6%88%AA%E5%9C%96/%E5%BE%8C%E8%87%BA%E7%99%BB%E5%85%A5%E7%95%AB%E9%9D%A2.png?raw=true)
 
 2. Mining Information
-![image](https://github.com/aron-666/Aron.DawnMiner/blob/master/%E6%88%AA%E5%9C%96/%E6%8C%96%E7%A4%A6%E7%95%AB%E9%9D%A2.png?raw=true)
+![image](https://github.com/aron-666/Aron.DawnMiner/blob/main/%E6%88%AA%E5%9C%96/%E6%8C%96%E7%A4%A6%E7%95%AB%E9%9D%A2.png?raw=true)
 
 ## 1. Docker Installation
 1. Install Docker
@@ -62,5 +62,5 @@ Written in .Net 8
      - The process continues even if the webpage is closed.
      - For Windows auto-start, adjust settings in Docker Desktop.
 
-   ![image](https://github.com/aron-666/Aron.DawnMiner/blob/master/%E9%A9%97%E8%AD%89%E7%A2%BC.png?raw=true)
+   ![image](https://github.com/aron-666/Aron.DawnMiner/blob/main/%E9%A9%97%E8%AD%89%E7%A2%BC.png?raw=true)
 
