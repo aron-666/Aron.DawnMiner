@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Aron.DawnMiner.Models
 {
@@ -29,12 +27,16 @@ namespace Aron.DawnMiner.Models
 
                 for (int i = 0; i < appVersion.Length; i++)
                 {
-                    if (int.Parse(appVersion[i]) < int.Parse(lastAppVersion[i]))
+
+                    if (int.Parse(appVersion[i]) > int.Parse(lastAppVersion[i]))
                     {
-                        return true;
+                        return false;
                     }
                 }
-                return false;
+                if (int.Parse(appVersion[appVersion.Length - 1]) == int.Parse(lastAppVersion[appVersion.Length - 1]))
+                    return false;
+                return true;
+
 
             }
         }
@@ -79,7 +81,6 @@ namespace Aron.DawnMiner.Models
         /// <summary>
         /// 狀態
         /// </summary>
-        [JsonConverter(typeof(StringEnumConverter))]
         public MinerStatus Status { get; set; }
 
         /// <summary>
@@ -103,12 +104,10 @@ namespace Aron.DawnMiner.Models
         [Display(Name = "圖片")]
         public string? Base64Image { get; set; }
 
+
         /// <summary>
         /// 驗證碼圖片
         /// </summary>
         public string? CaptchaBase64Image { get; set; }
-
-        
-
     }
 }
