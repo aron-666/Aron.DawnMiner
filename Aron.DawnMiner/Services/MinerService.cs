@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium;
@@ -8,7 +8,6 @@ using System.Drawing;
 using Newtonsoft.Json;
 using System.Text;
 using Aron.DawnMiner.Models;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 
 namespace Aron.DawnMiner.Services
 {
@@ -116,7 +115,7 @@ namespace Aron.DawnMiner.Services
                 //options.AddArgument("--enable-javascript");
                 options.AddArgument("--auto-close-quit-quit");
                 options.AddArgument("disable-infobars");
-                options.AddArgument("--window-size=500,768");
+                options.AddArgument("--window-size=1024,768");
                 if ((_appConfig.ProxyEnable ?? "").ToLower() == "true"
                     && !string.IsNullOrEmpty(_appConfig.ProxyHost))
                 {
@@ -132,6 +131,10 @@ namespace Aron.DawnMiner.Services
                 options.AddArgument("--disable-gpu"); // 禁用 GPU 加速，减少资源占用
                 options.AddArgument("--disable-software-rasterizer"); // 禁用软件光栅化器
                 options.AddArgument("--disable-dev-shm-usage"); // 禁用 /dev/shm 临时文件系统
+                options.AddArgument("--disable-notifications");
+                options.AddArgument("--disable-popup-blocking");
+                options.AddArgument("--disable-infobars");
+                options.AddArgument("--renderer-process-limit=3");
                 //options.AddArgument("--force-dark-mode");
                 options.AddArgument("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36 Edg/121.0.0.0");
 
@@ -142,11 +145,11 @@ namespace Aron.DawnMiner.Services
                 driver = new ChromeDriver(options);
                 try
                 {
-                    
+
                     _minerRecord.Status = MinerStatus.LoginPage;
                     await Login();
 
-                    
+
 
                 }
                 catch (Exception ex)
@@ -159,7 +162,7 @@ namespace Aron.DawnMiner.Services
                 }
 
 
-                
+
 
                 driver.Manage().Window.Size = new Size(500, 768);
 
@@ -170,7 +173,7 @@ namespace Aron.DawnMiner.Services
                     {
                         if (!driver.PageSource.Contains("Connected"))
                         {
-                            
+
                             _minerRecord.Status = MinerStatus.Disconnected;
                             _minerRecord.IsConnected = false;
                             _minerRecord.ReconnectCounts++;
@@ -203,16 +206,17 @@ namespace Aron.DawnMiner.Services
                         {
                             _minerRecord.ReconnectSeconds = countdownSeconds;
 
-                            SpinWait.SpinUntil(() => false, 1000); // 等待 1 秒
+                            SpinWait.SpinUntil(() => false, 3000); // 等待 3 秒
                             if (driver.PageSource.Contains("Connected"))
                                 break;
-                            countdownSeconds--;
+                            countdownSeconds -= 3;
                             if (!Enabled)
                             {
                                 break;
                             }
                         }
-                        if (Enabled && BeforeRefresh.AddSeconds(60) <= DateTime.Now)
+                        // 20-35 分鐘後重新整理
+                        if (Enabled && BeforeRefresh.AddMinutes(15 + new Random().Next(5, 20)) <= DateTime.Now)
                         {
                             BeforeRefresh = DateTime.Now;
                             //refresh
@@ -296,7 +300,7 @@ namespace Aron.DawnMiner.Services
                     catch (Exception)
                     {
                     }
-                    
+
 
                     await Task.Delay(3000);
                 }
@@ -341,7 +345,7 @@ namespace Aron.DawnMiner.Services
             }
 
         }
-        
+
         private LoginConfig GetLoginConfig()
         {
             var script = @"
@@ -441,7 +445,7 @@ namespace Aron.DawnMiner.Services
 
                 }
 
-                
+
             }
             catch (Exception ex)
             {
@@ -469,7 +473,7 @@ namespace Aron.DawnMiner.Services
                     try
                     {
                         string? base64 = (string)driver.ExecuteScript("return document.getElementById('puzzleImage').src;");
-                        if(!string.IsNullOrEmpty(base64) && base64.StartsWith("data:image"))
+                        if (!string.IsNullOrEmpty(base64) && base64.StartsWith("data:image"))
                         {
                             _minerRecord.CaptchaBase64Image = base64;
                             return true;

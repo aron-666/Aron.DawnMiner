@@ -1,0 +1,111 @@
+body {
+  background-color: #f8f9fa;
+}
+
+.container {
+  margin-top: 50px;
+}
+
+.card {
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s;
+}
+
+.card-body {
+  background-color: #ffffff;
+  border-radius: 15px;
+}
+
+#divUpdate a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+  #divUpdate a:hover {
+      text-decoration: underline;
+  }
+
+.card-text {
+  font-size: 16px;
+}
+
+  .card-text strong {
+      color: #333333;
+  }
+
+  .card-text span {
+      color: #555555;
+  }
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 10px 0;
+}
+
+.status-connected {
+  background-color: #c3e6cb;
+  border-color: rgba(140, 248, 66, 0.8);
+  border-width: 15px;
+  color: #155724;
+}
+
+.status-disconnected {
+  background-color: #f5c6cb;
+  border-color: #721c24;
+  border-width: 15px;
+  color: #721c24;
+}
+
+.status-appstart {
+  background-color: #ffeeba;
+  border-color: #856404;
+  border-width: 15px;
+  color: #856404;
+}
+
+#captcha {
+  display: flex;
+  flex-direction: column; /* 垂直排列 */
+  align-items: flex-start; /* 左對齊 */
+  gap: 10px; /* 元素間距 */
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  width: 100%; /* 撐滿容器寬度 */
+}
+
+/* 驗證碼圖片樣式 */
+.puzzleImageSty {
+  width: 180px;
+  height: 60px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* 刷新按鈕樣式 */
+.refresh-btn {
+  cursor: pointer;
+  padding: 5px;
+  font-size: 16px;
+}
+
+/* 等號樣式 */
+.puzzelEqualSign {
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+}
+
+/* 輸入框樣式 */
+.inputstyle input {
+  width: 180px;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  text-align: center;
+  font-size: 16px;
+}
