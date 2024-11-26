@@ -171,6 +171,17 @@ namespace Aron.DawnMiner.Services
                 {
                     try
                     {
+                        // 找到 video class="new-img" 移除它
+                        // 幹 就是它 給我吃一堆CPU
+                        try
+                        {
+                            driver.ExecuteScript("document.querySelectorAll('video.new-img').forEach(e => e.remove());");
+                        }
+                        catch
+                        {
+
+                        }
+
                         if (!driver.PageSource.Contains("Connected"))
                         {
 
@@ -221,6 +232,17 @@ namespace Aron.DawnMiner.Services
                             BeforeRefresh = DateTime.Now;
                             //refresh
                             driver.Navigate().GoToUrl($"chrome-extension://{extensionId}/dashboard.html");
+
+                            try
+                            {
+                                // 等待video class="new-img" 出現
+                                var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+                                driver.ExecuteScript("document.querySelectorAll('video.new-img').forEach(e => e.remove());");
+                            }
+                            catch
+                            {
+
+                            }
                             SpinWait.SpinUntil(() => !Enabled, 15000);
                         }
                         await Task.Delay(5000);
