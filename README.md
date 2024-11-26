@@ -65,3 +65,17 @@
 
    ![image](https://github.com/aron-666/Aron.DawnMiner/blob/main/%E6%88%AA%E5%9C%96/%E9%A9%97%E8%AD%89%E7%A2%BC.png?raw=true)
 
+
+# 支持此項目
+
+如果您覺得這個自動挖礦機器人對您有所幫助，並希望支持我繼續開發，歡迎您：
+
+☕ **請我喝杯咖啡！** ☕
+
+您的支持就像一杯香醇的咖啡，讓我充滿能量繼續努力寫程式！
+
+### 咖啡地址
+- **BEP20（USDT/BNB 等）：** `0xd14ee77edb0a052eb955db6fcd2a1cdcafeef53e`
+- **TRC20（USDT 等）：** `THrEH2tKHxCUiSiuFpGhU99Y4QdChW8dub`
+
+感謝您的慷慨支持！ 🙌
