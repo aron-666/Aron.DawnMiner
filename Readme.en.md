@@ -64,3 +64,19 @@ Written in .Net 8
 
    ![image](https://github.com/aron-666/Aron.DawnMiner/blob/main/%E6%88%AA%E5%9C%96/%E9%A9%97%E8%AD%89%E7%A2%BC.png?raw=true)
 
+
+
+
+# Support the Project
+
+If you find this automated mining bot helpful and would like to support my ongoing development, feel free to:
+
+☕ **Buy me a coffee!** ☕
+
+Your support is like a freshly brewed cup of coffee that keeps me energized to keep coding!
+
+### Donation Addresses
+- **BEP20 (USDT/BNB, etc.):** `0xd14ee77edb0a052eb955db6fcd2a1cdcafeef53e`
+- **TRC20 (USDT, etc.):** `THrEH2tKHxCUiSiuFpGhU99Y4QdChW8dub`
+
+Thank you for your generosity! 🙌
