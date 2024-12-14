@@ -104,11 +104,10 @@ namespace Aron.DawnMiner.Services
 
 
                 // 設定 Chrome 擴充功能路徑
-                string chromedriverPath = "./chromedriver";
+                string chromedriverPath = "/usr/bin/chromedriver";
 
                 // 建立 Chrome 選項
                 ChromeOptions options = new ChromeOptions();
-                options.AddArgument("--chromedriver=" + chromedriverPath);
                 if (!_appConfig.ShowChrome)
                     options.AddArgument("--headless=new");
                 options.AddArgument("--no-sandbox");
@@ -142,7 +141,15 @@ namespace Aron.DawnMiner.Services
 
 
                 // 建立 Chrome 瀏覽器
-                driver = new ChromeDriver(options);
+                if (!File.Exists(chromedriverPath))
+                {
+                    chromedriverPath = "./chromedriver";
+                    options.AddArgument("--chromedriver=" + chromedriverPath);
+                    driver = new ChromeDriver(options);
+
+                }
+                else
+                    driver = new ChromeDriver(chromedriverPath, options);
                 try
                 {
 
