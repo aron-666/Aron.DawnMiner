@@ -12,8 +12,8 @@
 		<NeutralLanguage>zh-TW</NeutralLanguage>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<RepositoryUrl>https://github.com/aron-666/Aron.DawnMiner</RepositoryUrl>
-		<FileVersion>1.0.0.10</FileVersion>
-		<AssemblyVersion>1.0.0.10</AssemblyVersion>
+		<FileVersion>1.0.0.11</FileVersion>
+		<AssemblyVersion>1.0.0.11</AssemblyVersion>
 		<Version>$(AssemblyVersion)</Version>
 		<PublishAot>true</PublishAot>
 		<IsAotCompatible>true</IsAotCompatible>
