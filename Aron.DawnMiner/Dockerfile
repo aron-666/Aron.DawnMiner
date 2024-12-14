@@ -35,15 +35,6 @@ RUN dotnet restore "$PROJECT_NAME.csproj"
 
 COPY . ./
 
-#RUN case "${TARGETARCH}" in \
-        #amd64) RID="x64" ;; \
-        #arm64) RID="arm64" ;; \
-        #arm/*) RID="arm" ;; \
-        #386)   RID="x86" ;; \
-        #*)     echo "Unsupported architecture: ${TARGETARCH}"; exit 1 ;; \
-    #esac \
-    #dotnet publish "$PROJECT_NAME.csproj" -c $BUILD_CONFIGURATION -o /app/publish --self-contained -r $OS-$RID /p:PublishAot=true
-#
 
 RUN case "$TARGETARCH" in \
         amd64)  RID="x64" ;; \
@@ -79,10 +70,11 @@ RUN apt-get install -y --no-install-recommends \
     iputils-ping \
     ca-certificates \
     chromium \
+    chromium-driver \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=build /app/publish .
 
 RUN chmod +x ${PROJECT_NAME}
 
-ENTRYPOINT ["./{$PROJECT_NAME}"]
+ENTRYPOINT ["sh", "-c", "./$PROJECT_NAME"]
