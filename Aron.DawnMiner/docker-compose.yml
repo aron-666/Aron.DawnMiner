@@ -12,6 +12,3 @@ services:
       - ./data:/app/data
     ports:
       - 5006:50006
-    build: 
-      context: .
-      dockerfile: Dockerfile
