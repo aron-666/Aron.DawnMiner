@@ -6,7 +6,7 @@ variables:
   DOCKER_DRIVER: overlay2
   IMAGE_NAME: "aron666/dawn"
   TAG_LATEST: "test"
-  TAG_VERSION: "1.0.0.10"
+  TAG_VERSION: "1.0.0.12"
   BRANCH: develop
   PROJECT_NAME: "Aron.DawnMiner"
   DOCKER_TLS_CERTDIR: "" # 禁用 TLS 驗證

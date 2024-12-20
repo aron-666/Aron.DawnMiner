@@ -238,7 +238,7 @@ namespace Aron.DawnMiner.Services
                         {
                             BeforeRefresh = DateTime.Now;
                             //refresh
-                            driver.Navigate().GoToUrl($"chrome-extension://{extensionId}/dashboard.html");
+                            driver.Navigate().GoToUrl($"chrome-extension://{extensionId}/pages/dashboard.html");
 
                             try
                             {
@@ -275,7 +275,7 @@ namespace Aron.DawnMiner.Services
 
         private async Task Login()
         {
-            driver.Navigate().GoToUrl($"chrome-extension://{extensionId}/signin.html");
+            driver.Navigate().GoToUrl($"chrome-extension://{extensionId}/pages/signin.html");
 
             WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(60));
 
@@ -286,8 +286,8 @@ namespace Aron.DawnMiner.Services
             // 讀取 data/loginConfig.json
             if (System.IO.File.Exists("data/loginConfig.json"))
                 loginConfig = JsonConvert.DeserializeObject<LoginConfig>(System.IO.File.ReadAllText("data/loginConfig.json"));
-
-            if (loginConfig == null || loginConfig.username != _appConfig.UserName)
+            string base64Username = Convert.ToBase64String(Encoding.UTF8.GetBytes(_appConfig.UserName));
+            if (loginConfig == null || loginConfig.username == _appConfig.UserName || loginConfig.username != base64Username)
             {
                 // 未登入，輸入帳號密碼
                 IWebElement? usernameElement = driver.FindElement(By.Id("email"));
@@ -369,7 +369,7 @@ namespace Aron.DawnMiner.Services
                 AddToLocalStorage(driver, loginConfig);
 
                 // go to dashboard
-                driver.Navigate().GoToUrl($"chrome-extension://{extensionId}/dashboard.html");
+                driver.Navigate().GoToUrl($"chrome-extension://{extensionId}/pages/dashboard.html");
                 Console.WriteLine("Go to dashboard: " + driver.Url);
             }
 
