@@ -250,6 +250,13 @@ namespace Aron.DawnMiner.Services
                             {
 
                             }
+
+                            // 重新寫入 loginConfig
+                            LoginConfig? loginConfig = GetLoginConfig();
+                            if (loginConfig != null)
+                            {
+                                System.IO.File.WriteAllText("data/loginConfig.json", JsonConvert.SerializeObject(loginConfig));
+                            }
                             SpinWait.SpinUntil(() => !Enabled, 15000);
                         }
                         await Task.Delay(5000);
